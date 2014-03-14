@@ -5,4 +5,6 @@ display window effect plugin for e-commerce website
 
 #DEMO
 
-http://poopoo888888.github.io/displayWindow/demo.html
+http://howtomakeaturn.github.io/displayWindow/demo.html
+
+#It shows two common usages of this plugin.
