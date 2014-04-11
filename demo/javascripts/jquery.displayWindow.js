@@ -3,22 +3,59 @@ $.fn.displayWindow = function(options) {
     var _counter = 0;
     var _totalElement = this.find('li').size();
     var _elementOuterWidth = 0;
+
+    this.flipLeft = function(times){
+        times = typeof times !== 'undefined' ? times : 1;
+        _counter += times;
+        $('.lun-zhuan-item').animate({ left: "-=" + times * _elementOuterWidth + "px" });
+    }
+    this.flipRight = function(times){
+        times = typeof times !== 'undefined' ? times : 1;
+        _counter -= times;
+        $('.lun-zhuan-item').animate({ left: "+=" + times * _elementOuterWidth + "px" });
+    }
     
-    var self = this;
     // 'this' as public method.. wishfully
     this.resetButton = function(){
-        console.log('_counter is ' + _counter);
-        self.find('.lun-zhuan-button-right').attr('disabled', false);
-        self.find('.lun-zhuan-button-left').prop('disabled', false);
+        /*
+        if ( _totalElement <= 4 ){
+            $('.lun-zhuan-button-right').attr('disabled', true);
+            $('.lun-zhuan-button-left').prop('disabled', true);
+            $('.lun-zhuan-button-left img').attr('src', '/assets/images/ButtonLeftGray.png');
+            $('.lun-zhuan-button-right img').attr('src', '/assets/images/ButtonRightGray.png');
+            return;          
+        }
+        */
+        $('.lun-zhuan-button-right').attr('disabled', false);
+        $('.lun-zhuan-button-left').prop('disabled', false);
+        $('.lun-zhuan-button-left img').attr('src', '/assets/images/ButtonLeft.png');
+        $('.lun-zhuan-button-right img').attr('src', '/assets/images/ButtonRight.png');
         
 
-        if ( _counter == (_totalElement - 4) ){
-            self.find('.lun-zhuan-button-left').prop('disabled', true);
+        
+//        if ( _totalElement - _counter <= 4 ){
+        if ( _totalElement - _counter <= 0 ){
+            console.log('rightest');
+            var move_to = Math.ceil(_totalElement/4) * 4;
+            _counter = 0;
+            var obj = { left: '+=' +  move_to * _elementOuterWidth + "px" };
+//            var obj = { left: '+=' +  500 + "px" };
+            console.log(obj);
+            $('.lun-zhuan-item').animate(obj);            
         }
         
-        if ( _counter == 0 ){
-            self.find('.lun-zhuan-button-right').attr('disabled', 'disabled');
+        
+        
+        if ( _counter == -4 ){
+            console.log("it's me here");
+            var move_to = Math.floor(_totalElement/4) * 4;
+            _counter = move_to - 4;
+            var obj = { left: '-=' +  move_to * _elementOuterWidth + "px" };
+//            var obj = { left: '+=' +  500 + "px" };
+            console.log(obj);
+            $('.lun-zhuan-item').animate(obj);
         }
+        
     }
     
     // This is the easiest way to have default options.
@@ -37,7 +74,7 @@ $.fn.displayWindow = function(options) {
     });            
   
     this.find('li').css({ 
-        width: '200px',
+        width: '220px',
         position: 'relative',
         float: 'left'
     });
@@ -46,7 +83,7 @@ $.fn.displayWindow = function(options) {
     this.find('li').addClass(settings.itemClass);
 
     _elementOuterWidth = this.find('li').first().outerWidth(true);
-    console.log(_elementOuterWidth);
+
     this.addClass('lun-zhuan-container');
     this.css({
         'list-style': 'none',
@@ -78,24 +115,23 @@ $.fn.displayWindow = function(options) {
 
     var self = this;
 
-    // initialize the buttons
+    // flip twice. let user can click either left or right button
+    if ( _totalElement >= 20 ){
+        self.flipLeft(8);
+    }
+    // initialize the buttons    
     self.resetButton();
+      _elementOuterWidth = this.find('li').first().outerWidth(true);
+      console.log(_elementOuterWidth + 'aya');
 
     // register the click event for both buttons
-    $('.lun-zhuan-button-left').click(function(){              
-        _counter ++;              
-        self.find('.lun-zhuan-item').animate({ left: "-=" + _elementOuterWidth + "px" });
+    $('.lun-zhuan-button-left').click(function(){
+        self.flipRight(4);
         self.resetButton();
     });
     
     $('.lun-zhuan-button-right').click(function(){
-        _counter --;                              
-        self.find('.lun-zhuan-item').animate({ left: "+=" + _elementOuterWidth + "px" })
+        self.flipLeft(4);
         self.resetButton();
-        
     });
-    
-      _elementOuterWidth = this.find('li').first().outerWidth(true);
-      console.log(_elementOuterWidth + 'aya');
-    
 };      
